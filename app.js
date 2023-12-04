@@ -1,32 +1,76 @@
-// document.querySelector é para selecionar o documento HTML , inner = dentro 
-let titulo = document.querySelector('h1');
-titulo.innerHTML = 'Hora do Desafio'; 
+let listaDeNumerosSorteados = [];
+let numeroLimite = 10;
+let numeroSecreto = gerarNumeroAleatorio();
+let tentativas = 1;
 
-function verificarChute(){
-    console.log('O botao foi clicado');
+// função que exibi o texto do jogo na tela
+
+function exibirTextoNaTela(tag, texto) {
+    let campo = document.querySelector(tag);
+    campo.innerHTML = texto;
+    responsiveVoice.speak(texto, 'Brazilian Portuguese Female', { rate: 1.2 });
 }
 
-function exibirMensagemNoConsole() {
-    console.log('O botão foi clicado!')
+function exibirMensagemInicial() {
+    exibirTextoNaTela('h1', 'Jogo do número secreto');
+    exibirTextoNaTela('p', 'Escolha um número entre 1 e 10');
 }
 
-//função para exibir alerta quando o botão alerta for clicado
-function verificarAlerta(){
-    alert('Eu amo JS');
+exibirMensagemInicial();
+
+// função para verificar o chute
+
+function verificarChute() {
+    let chute = document.querySelector('input').value;
+
+    if (chute == numeroSecreto) {
+        exibirTextoNaTela('h1', 'Acertou!');
+        let palavraTentativa = tentativas > 1 ? 'tentativas' : 'tentativa';
+        let mensagemTentativas = `Você descobriu o número secreto com ${tentativas} ${palavraTentativa}!`;
+        exibirTextoNaTela('p', mensagemTentativas);
+        document.getElementById('reiniciar').removeAttribute('disabled');
+    } else {
+        if (chute > numeroSecreto) {
+            exibirTextoNaTela('p', 'O número secreto é menor');
+        } else {
+            exibirTextoNaTela('p', 'O número secreto é maior');
+        }
+        tentativas++;
+        limparCampo();
+    }
 }
 
+// função para gerar numero aleatorio
 
-//função que  pede ao usuario e exibi na tela
-function verificarPrompt(){
-  let cidade = prompt('Fale o nome de uma cidade do Brasil?');
-   alert(`Estive em ${cidade} e lembrei de voce`);
+function gerarNumeroAleatorio() {
+    let numeroEscolhido = parseInt(Math.random() * numeroLimite + 1);
+    let quantidadeDeElementosNaLista = listaDeNumerosSorteados.length;
+
+    if (quantidadeDeElementosNaLista == numeroLimite) {
+        listaDeNumerosSorteados = [];
+    }
+    if (listaDeNumerosSorteados.includes(numeroEscolhido)) {
+        return gerarNumeroAleatorio();
+    } else {
+        listaDeNumerosSorteados.push(numeroEscolhido);
+        console.log(listaDeNumerosSorteados)
+        return numeroEscolhido;
+    }
 }
 
-// função que verifica a soma de dois numeros
-function verificarSoma(){
+// função que limpa o campo que inputa os dados
 
-    let primeiroNumero = parseInt(prompt('Digite o primeiro numeros'));
-    let segundoNumero = parseInt(prompt('Digite o segundo numero'));
-    let resultado = primeiroNumero + segundoNumero;
-     alert('A soma e : ' + resultado);
-  }
+function limparCampo() {
+    chute = document.querySelector('input');
+    chute.value = '';
+}
+
+// função que reinicia o jogo
+
+function reiniciarJogo() {
+    numeroSecreto = gerarNumeroAleatorio();
+    limparCampo();
+    tentativas = 1;
+    exibirMensagemInicial();
+    document.getElementById('reiniciar').setAttribute('disabled', true)
+}
