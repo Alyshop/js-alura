@@ -1,3 +1,3 @@
 # js-alura
 
-# tamo ai na atividade
+# tamo ai na atividade :D
