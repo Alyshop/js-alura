@@ -3,7 +3,7 @@ let numeroLimite = 10;
 let numeroSecreto = gerarNumeroAleatorio();
 let tentativas = 1;
 
-// função que exibi o texto do jogo na tela
+// função que vai exibi o texto do jogo na tela
 
 function exibirTextoNaTela(tag, texto) {
     let campo = document.querySelector(tag);
